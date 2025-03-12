@@ -45,11 +45,11 @@ exports.deleteTask = async (req,res) =>{
             res.status(204).json(task);
         }
         else{
-            res.status(404).send('task is not found');
+            res.status(404).json({ message :"task is not found"} );
         }
     }
     catch(err){
-        res.status(500).send(err);
+        res.status(500).json({err :err});
     }
 };
 
