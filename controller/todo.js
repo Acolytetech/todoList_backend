@@ -27,7 +27,7 @@ exports.gettask = async (req, res) => {
     try {
         const task = await todos.findById(id);  
         if (task) {
-            res.json(task);  
+            res.status(200).json(task);  
         } else {
             res.status(404).send('task not found');  
         }
@@ -55,56 +55,20 @@ exports.deleteTask = async (req,res) =>{
 
 exports.updateTask =async (req,res) =>{
     const {id} = req.params;
-    const updatedtask = req.body;
+    const {task,status} = req.body;
+    // console.log(task)
+    // console.log(status)
     try {
-        const task = await todos.findByIdAndUpdate(id , updatedtask ,{new:true});
-        if (task){
-            await task.save();
-            res.json(task);
+        if(task && status === undefined){
+            await todos.findByIdAndUpdate({_id:id},{task:task});
+        }else if(status !== undefined && task === undefined){
+            await todos.findByIdAndUpdate({_id:id},{status:status});
         }
-        else{
-            res.status(404).json({message : 'task is not found'})
-        }
+
+        res.status(200).json({message: 'Task updated'});
     }
     catch (err){
          res.status(500).json({error: err.message}); 
     }
 }
 
-// exports.updateUser = async (req, res) => {
-//     const { id } = req.params;
-//     const newuserdata = req.body;
-
-//     try {
-//         const user = await users.findOneAndReplace({_id:id} , newuserdata , {new:true});
-//         if (user) {
-//             await user.save(); 
-//             res.json(user); 
-//         } else {
-//             res.status(404).json({message: 'User not.found'});  
-//         }
-        
-//         res.status(200).json({message: 'data updated'})
-//     } catch (err) {``
-//         console.log(err)
-//         res.status(500).json({error: err.message});  
-//     }
-// };
-
-// exports.editUser = async (req, res) => {
-//     const { id } = req.params;
-//     const updatedData = req.body;
-
-//     try {
-//         const user = await users.findById(id);  
-//         if (user) {
-//             user.set(updatedData);  
-//             await user.save(); 
-//             res.json(user); 
-//         } else {
-//             res.status(404).send('User not found');  
-//         }
-//     } catch (err) {
-//         res.status(500).send(err);  
-//     }
-// };

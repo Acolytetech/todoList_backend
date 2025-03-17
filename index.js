@@ -11,10 +11,12 @@ app.listen(port, ()=>{
     console.log(`server start on port ${port}`)
 })
 
+const DB = process.env.mongourl;
+
 // mongodb connect 
 async function mongodbconnection() {
     try{
-        await mongoose.connect(`${process.env.mongourl}`);
+        await mongoose.connect(DB);
         console.log(`database is connnected`)
 
     }
